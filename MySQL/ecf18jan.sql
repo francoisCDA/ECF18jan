@@ -105,5 +105,6 @@ CREATE TABLE enseignant_matiere(
 
 SELECT * FROM departement;  
 
+Select * from enseignant;
 
 
