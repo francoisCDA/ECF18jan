@@ -3,7 +3,9 @@ package org.example.service;
 import org.example.dao.impl.ClasseDAO;
 import org.example.entity.*;
 
-public class ClasseService {
+import java.util.List;
+
+public class ClasseService implements EntityService<Classe> {
 
     private ClasseDAO classeDAO;
 
@@ -19,11 +21,33 @@ public class ClasseService {
         classe.setEnseignant(matricule);
         classe.setIdDepartement(dpt);
 
-        return classeDAO.create(classe);
-
+        return create(classe);
 
     }
 
+    @Override
+    public boolean create(Classe obj) {
+        return classeDAO.create(obj);
+    }
+
+    @Override
+    public Classe get(int id) {
+        return null;
+    }
+
+    public List<Classe> getAll(){
+        return classeDAO.getAll();
+    }
+
+    @Override
+    public boolean upd(Classe obj) {
+        return false;
+    }
+
+    @Override
+    public boolean del(int id) {
+        return false;
+    }
 
 
 }

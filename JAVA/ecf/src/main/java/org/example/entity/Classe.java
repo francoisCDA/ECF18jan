@@ -65,4 +65,13 @@ public class Classe {
         this.idDepartement = idDepartement;
     }
 
+    @Override
+    public String toString() {
+        return "id : " + id +
+                " , classe : " + nomClasse +
+                " prof principal : " + enseignant.getNomEns() +
+                ", niveau : '" + niveauClasse + '\'' +
+                ", Departement : " + idDepartement.getNomDepart() +
+                '.';
+    }
 }

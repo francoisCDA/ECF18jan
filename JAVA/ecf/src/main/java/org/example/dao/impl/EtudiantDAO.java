@@ -2,19 +2,15 @@ package org.example.dao.impl;
 
 import org.example.dao.BaseDAO;
 import org.example.dao.DAO;
-import org.example.entity.Classe;
-import org.example.entity.Enseignant;
-import org.example.service.LazySessionService;
-import org.hibernate.Session;
+import org.example.entity.Departement;
+import org.example.entity.Etudiant;
 import org.hibernate.query.Query;
 
 import java.util.List;
 
-public class ClasseDAO extends BaseDAO implements DAO<Classe> {
-
-
+public class EtudiantDAO extends BaseDAO implements DAO<Etudiant> {
     @Override
-    public boolean create(Classe obj) {
+    public boolean create(Etudiant obj) {
         session = factory.openSession();
         session.beginTransaction();
 
@@ -30,12 +26,12 @@ public class ClasseDAO extends BaseDAO implements DAO<Classe> {
     }
 
     @Override
-    public Classe get(int id) {
+    public Etudiant get(int id) {
         session = factory.openSession();
         session.beginTransaction();
 
         try {
-            return session.get(Classe.class,id); // super class
+            return session.get(Etudiant.class,id);
         } catch (Exception e){
             return null;
         } finally {
@@ -44,29 +40,22 @@ public class ClasseDAO extends BaseDAO implements DAO<Classe> {
     }
 
     @Override
-    public List<Classe> getAll() {
-
-        Session lazySession = LazySessionService.getLazyClassSession();
-        lazySession.beginTransaction();
+    public List<Etudiant> getAll() {
+        session = factory.openSession();
+        session.beginTransaction();
 
         try {
-            Query<Classe> deptQuery = lazySession.createQuery("from Classe ");
+            Query<Etudiant> deptQuery = session.createQuery("from Etudiant");
             return deptQuery.list();
         } catch (Exception e){
-            lazySession.close();
             return null;
-
         } finally {
-            // bon à savoir : si je laisse la session ouverte, je n'ai plus de problème de LazyAccess.
-            // après 3 semaines de JPA, il suffisait d'y penser...
-            // reste à définir si c'est une bonne pratique
-
-            //session.close();
+            session.close();
         }
     }
 
     @Override
-    public boolean update(Classe obj) {
+    public boolean update(Etudiant obj) {
         return create(obj);
     }
 
@@ -76,11 +65,12 @@ public class ClasseDAO extends BaseDAO implements DAO<Classe> {
         session.beginTransaction();
 
         try {
-            Classe dept = session.get(Classe.class,id);
+            Etudiant dept = session.get(Etudiant.class,id);
             session.remove(dept);
             session.getTransaction().commit();
             return true;
         } catch (Exception ignored) {
+            //System.out.printf(ignored.getMessage());
             return false;
         } finally {
             session.close();

@@ -30,7 +30,10 @@ public class ConsoleIHM {
                 case "printDpt" -> cmd.printDept();
                 case "addEns" -> cmd.addEnsgn();
                 case "printEns" -> cmd.printEnsgn();
-                case "addClas" -> cmd.addClasse();
+                case "addClas", "addClass" -> cmd.addClasse();
+                case "addEtud" -> cmd.addEtud();
+                case "printClas", "printClass" -> cmd.printClass();
+                case "addMat" -> cmd.addMat();
 
                 case "" -> {}
                 default -> UtilIHM.consoleFail("commande non trouvée - tapper 'help' pour afficher la liste des commandes disponibles");
@@ -63,6 +66,13 @@ public class ConsoleIHM {
 
         UtilIHM.consoleConfirm("gestion des classes");
         UtilIHM.consoleLi("addClas - gestion des classes");
+        UtilIHM.consoleLi("printClas - lister des classes");
+
+        UtilIHM.consoleConfirm("gestion des étudiants");
+        UtilIHM.consoleLi("addEtud - ajouter un etudiant");
+
+        UtilIHM.consoleConfirm("gestion des matières");
+        UtilIHM.consoleLi("addMat - créer une matière");
 
 
         System.out.println("\n");
@@ -91,7 +101,17 @@ public class ConsoleIHM {
         cmd.addClasse();
         cmd.addClasse();
 
+        cmd.addEnsgn();
+        cmd.addEnsgn();
 
+        cmd.addEtud();
+        cmd.addEtud();
+        cmd.addEtud();
+
+        cmd.addMat();
+        cmd.addMat();
+        cmd.addMat();
+        
 
     }
 

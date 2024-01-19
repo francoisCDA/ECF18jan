@@ -107,4 +107,58 @@ SELECT * FROM departement;
 
 Select * from enseignant;
 
+select * from classe;
+
+select * from matiere;
+
+
+
+/*****************************
+	requete à tester
+***********************************/
+
+
+-- Afficher la liste des classes (sans les eleves).
+
+select nom_classe from classe;
+
+-- Afficher le nombre de matière d'un élève.
+
+SELECT e.id_etud, COUNT(et.id_matiere) AS nombre_de_matieres
+FROM etudiant e
+JOIN emploi_temps et ON e.id_classe = et.id_classe
+WHERE e.id_etud = 1
+GROUP BY e.id_etud;
+
+-- Afficher la liste des notes d'un eleve (avec les détails).
+
+SELECT note, commentaire_note FROM resultat WHERE id_etud = 1;
+
+-- Afficher la moyenne d'un eleve.
+
+SELECT e.id_etud, e.prenom_etud, e.nom_etud, AVG(r.note * m.coef_mat) AS moyenne
+FROM etudiant e
+JOIN resultat r ON e.id_etud = r.id_etud
+JOIN matiere m ON r.id_matiere = m.id_matiere
+WHERE e.id_etud = 1
+GROUP BY e.id_etud, e.prenom_etud, e.nom_etud;
+
+-- Afficher le nombre d'eleve d'un département.
+-- ou pourquoi pas le nombre d'élève pour chaque département
+SELECT d.nom_depart, c.nom_classe, COUNT(e.id_etud) AS nombre_eleves
+FROM departement d
+JOIN classe c ON d.id_departement = c.id_departement
+LEFT JOIN etudiant e ON c.id_classe = e.id_classe
+GROUP BY d.nom_depart, c.nom_classe;
+
+
+-- Afficher tous les noms des eleves d'un niveau.
+
+SELECT c.niveau_classe, COUNT(e.id_etud) AS nombre_eleves
+FROM classe c
+JOIN etudiant e ON c.id_classe = e.id_classe
+GROUP BY c.niveau_classe;
+
+
+
 

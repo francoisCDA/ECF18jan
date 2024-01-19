@@ -1,13 +1,10 @@
 package org.example.ihm;
 
-import org.example.entity.Departement;
-import org.example.entity.Enseignant;
-import org.example.entity.GradeEnseignant;
-import org.example.entity.NiveauClasse;
-import org.example.service.ClasseService;
-import org.example.service.DepartementService;
-import org.example.service.EnseignantService;
+import jdk.jshell.execution.Util;
+import org.example.entity.*;
+import org.example.service.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -15,13 +12,16 @@ public class Cmd {
 
     private DepartementService dptServ;
     private EnseignantService ensgnServ;
-
     private ClasseService classeServ;
+    private EtudiantService etudServ;
+    private MatiereService matServ;
 
     public Cmd(){
         dptServ = new DepartementService();
         ensgnServ = new EnseignantService();
         classeServ = new ClasseService();
+        etudServ = new EtudiantService();
+        matServ = new MatiereService();
     }
 
     /*
@@ -218,6 +218,8 @@ public class Cmd {
 
     public void addClasse(){
 
+        UtilIHM.H2("Création d'une nouvelle classe");
+
         Departement departement = selectDpt();
 
         Enseignant matricule = selectEnsgn();
@@ -243,7 +245,7 @@ public class Cmd {
             niveau = niv[0];
         }
 
-        String nomClasse = UtilIHM.inputText("nom de la classe");
+        String nomClasse = UtilIHM.inputText("nom de la classe (longueur max 10");
 
         if (classeServ.create(nomClasse,niveau,matricule,departement)){
             UtilIHM.consoleConfirm("la classe a été ajoutée");
@@ -252,6 +254,104 @@ public class Cmd {
         }
 
     }
+
+    public boolean printClass() {
+        List<Classe> classes = classeServ.getAll();
+
+        if (classes == null || classes.isEmpty()) {
+            UtilIHM.consoleFail("aucune classe trouvée");
+            return false;
+        }
+
+        for (Classe cl: classes) {
+            UtilIHM.consoleLi(cl.toString());
+            //UtilIHM.consoleLi(cl.getId() + " - " + cl.getNomClasse()); // le toString ne fontionne pas -> changer le mode lazy...
+        }
+        return true;
+    }
+
+
+
+    /*
+            LES ETUDIANTS
+    */
+
+    public void addEtud(){
+
+        UtilIHM.H2("Création d'un nouvel etudiant");
+
+        if (!printClass()) {
+            UtilIHM.consoleConfirm("Créer des classes avant d'inscrire des élèves");
+            return;
+        }
+
+        Classe classe;
+
+        try {
+            int idClasse = UtilIHM.inputNumber("indiquer l'id de la classe");
+            classe = classeServ.get(idClasse);
+            if (classe == null) { throw new Exception();};
+        } catch (Exception e) {
+            UtilIHM.consoleFail("saisie invalide, opération annulée");
+            return;
+        }
+
+        String nomEtud = UtilIHM.inputText("nom de l'étudiant");
+
+        String prenomEtud = UtilIHM.inputText("prénom de l'étudiant");
+
+        LocalDate naissance = UtilIHM.inputDate("date de naissance");
+
+        String userGmail = UtilIHM.inputText("nom d'utilisateur @gmail.com (ne pas saisir l'adresse complète");
+
+
+        if (etudServ.create(prenomEtud,nomEtud,naissance,userGmail,classe)){
+            UtilIHM.consoleConfirm("étudiant ajouté");
+        } else {
+            UtilIHM.consoleFail("un problème est survenu");
+        }
+
+    }
+
+
+    /*
+            Les Matieres
+    */
+
+    public void addMat(){
+
+        UtilIHM.H2("Ajout d'une nouvelle matière");
+
+        String intitule = UtilIHM.inputText("intitulé");
+
+        String desc = UtilIHM.inputText("description");
+
+        int minutes ;
+
+        try {
+            minutes = UtilIHM.inputNumber("nombre de minute");
+        } catch (Exception e) {
+            minutes = 120;
+        }
+
+        BigDecimal coef = BigDecimal.valueOf(UtilIHM.inputPrix("coeficient (entre 1 et 5)"));
+
+        if (coef.compareTo(BigDecimal.ONE) < 0 || coef.compareTo(new BigDecimal("5")) > 0) {
+            coef = BigDecimal.ONE;
+        }
+        // compliqué pour rien ce type de variable... j'aurais dû utiliser un int...
+
+
+        if (matServ.create(intitule,desc,minutes,coef)){
+            UtilIHM.consoleConfirm("matière ajoutée");
+        } else {
+            UtilIHM.consoleError("une erreur est survenue");
+        }
+
+    }
+
+
+
 
 
 

@@ -27,6 +27,7 @@ public class SessionFactoryService {
     }
 
     public static void close() {
+        LazySessionService.closeLazySession();
         instance.sessionFactory.close();
         instance = null;
     }

@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
 
-public class EnseignantService {
+public class EnseignantService implements EntityService<Enseignant>{
 
     private EnseignantDAO ensgnDAO;
 
@@ -33,16 +33,33 @@ public class EnseignantService {
         enseignant.setIdDepartement(dept);
         enseignant.setDirectDepart(isDirecteur);
 
-        return ensgnDAO.create(enseignant);
+        return create(enseignant);
 
+    }
+
+    @Override
+    public boolean create(Enseignant obj) {
+        return ensgnDAO.create(obj);
+    }
+
+    @Override
+    public Enseignant get(int id) {
+        return null;
     }
 
     public List<Enseignant> getAll(){
-
         return ensgnDAO.getAll();
-
     }
 
+    @Override
+    public boolean upd(Enseignant obj) {
+        return false;
+    }
+
+    @Override
+    public boolean del(int id) {
+        return false;
+    }
 
 
 }

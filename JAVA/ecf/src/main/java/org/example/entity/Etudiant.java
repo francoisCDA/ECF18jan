@@ -23,6 +23,18 @@ public class Etudiant {
     @Column(name = "email", length = 50)
     private String email;
 
+    @ManyToOne
+    @JoinColumn(name = "id_classe")
+    private Classe classe;
+
+    public Classe getClasse() {
+        return classe;
+    }
+
+    public void setClasse(Classe classe) {
+        this.classe = classe;
+    }
+
     public Integer getId() {
         return id;
     }
