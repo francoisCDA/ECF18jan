@@ -6,9 +6,7 @@ import org.example.ihm.ConsoleIHM;
 public class Main {
     public static void main(String[] args) {
 
-        ConsoleIHM console = new ConsoleIHM();
-
-        console.tests();
+        new ConsoleIHM().run();
 
     }
 

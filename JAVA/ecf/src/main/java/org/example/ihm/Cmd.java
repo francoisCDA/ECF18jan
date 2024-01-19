@@ -3,6 +3,8 @@ package org.example.ihm;
 import org.example.entity.Departement;
 import org.example.entity.Enseignant;
 import org.example.entity.GradeEnseignant;
+import org.example.entity.NiveauClasse;
+import org.example.service.ClasseService;
 import org.example.service.DepartementService;
 import org.example.service.EnseignantService;
 
@@ -14,20 +16,55 @@ public class Cmd {
     private DepartementService dptServ;
     private EnseignantService ensgnServ;
 
+    private ClasseService classeServ;
 
     public Cmd(){
         dptServ = new DepartementService();
         ensgnServ = new EnseignantService();
+        classeServ = new ClasseService();
     }
 
     /*
             LES DEPARTEMENTS
     */
 
+    public void addDpt(){
+
+        String nomDpt = UtilIHM.inputText("nom du département");
+
+        if (addDpt(nomDpt)) {
+            UtilIHM.consoleConfirm("département ajouté");
+        } else {
+            UtilIHM.consoleFail("erreur");
+        }
+
+
+    }
+
     public boolean addDpt(String dptName) {
 
         return dptServ.create(dptName);
     }
+
+    public void rmDpt(){
+
+        if (!printDept()){ return; }
+
+        try {
+            int id = UtilIHM.inputNumber("saisir un id");
+
+            if (rmDpt(id)) {
+                UtilIHM.consoleConfirm("département supprimé");
+            } else {
+                UtilIHM.consoleError("suppression impossible");
+            }
+
+        } catch (Exception e) {
+            UtilIHM.consoleError("erreur de saisie");
+        }
+
+    }
+
 
     public boolean rmDpt(int idDpt){
 
@@ -49,7 +86,7 @@ public class Cmd {
 
     }
 
-    public Departement selectDpt(){
+    private Departement selectDpt(){
 
         UtilIHM.H3("sélectionner un département");
 
@@ -58,7 +95,7 @@ public class Cmd {
         Departement departement ;
 
         try {
-            int dptId = UtilIHM.inputNumber("numéro de département");
+            int dptId = UtilIHM.inputNumber("id du département");
             departement = dptServ.get(dptId);
         } catch (Exception e) {
             UtilIHM.consoleFail("département invalide");
@@ -127,7 +164,7 @@ public class Cmd {
 
     }
 
-    private boolean printEnsgn() {
+    public boolean printEnsgn() {
 
         List<Enseignant> ensgnList = ensgnServ.getAll();
 
@@ -175,13 +212,11 @@ public class Cmd {
 
 
 
-
-
      /*
             LES CLASSES
     */
 
-    public void addClaase(){
+    public void addClasse(){
 
         Departement departement = selectDpt();
 
@@ -189,10 +224,32 @@ public class Cmd {
 
         // inutile si une classe n'a QUE des profs d'un même département
 
+        NiveauClasse[] niv = NiveauClasse.values();
+        NiveauClasse niveau;
 
-        
+        for (NiveauClasse n:niv ){
+             UtilIHM.consoleLi(n.getVal() + " - " + n);
+        }
 
+        try {
+            int choix = UtilIHM.inputNumber("indiquer le niveau");
+            if (choix >= 0 && choix < niv.length){
+                niveau = niv[choix];
+            } else {
+                niveau = niv[0];
+            }
 
+        } catch (Exception e) {
+            niveau = niv[0];
+        }
+
+        String nomClasse = UtilIHM.inputText("nom de la classe");
+
+        if (classeServ.create(nomClasse,niveau,matricule,departement)){
+            UtilIHM.consoleConfirm("la classe a été ajoutée");
+        } else {
+            UtilIHM.consoleFail("Erreur à l'ajout de la classe");
+        }
 
     }
 

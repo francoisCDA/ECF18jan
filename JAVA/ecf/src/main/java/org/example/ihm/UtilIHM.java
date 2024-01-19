@@ -215,6 +215,7 @@ public class UtilIHM {
 
     public static <E extends Enum<E>> String[] parseEnumToStringTable(Class<E> monEnum){
 
+
         ArrayList<String> ret = new ArrayList<>();
 
         for (E type: monEnum.getEnumConstants()) {
@@ -234,6 +235,8 @@ public class UtilIHM {
 
 
     }
+
+
 
     public static void closeScanner() {
         scan.close();

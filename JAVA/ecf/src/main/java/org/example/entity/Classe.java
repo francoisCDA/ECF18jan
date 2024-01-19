@@ -21,7 +21,6 @@ public class Classe {
     private String niveauClasse;
 
 
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_departement", nullable = false)
     private Departement idDepartement;
